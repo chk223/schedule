@@ -1,5 +1,7 @@
 package Lv4.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -11,7 +13,8 @@ public class UserUpdateInput {
     private final String password;
     private final String email;
 
-    public UserUpdateInput(UUID id, String name, String password, String email) {
+    @JsonCreator
+    public UserUpdateInput(@JsonProperty("id") UUID id, @JsonProperty("name") String name, @JsonProperty("password")String password, @JsonProperty("email")String email) {
         this.id = id;
         this.name = name;
         this.password = password;

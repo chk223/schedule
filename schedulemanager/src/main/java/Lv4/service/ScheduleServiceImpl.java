@@ -2,6 +2,7 @@ package Lv4.service;
 
 import Lv4.domain.Schedule;
 import Lv4.domain.User;
+import Lv4.dto.login.LoginRequest;
 import Lv4.dto.schedule.ScheduleDeleteInput;
 import Lv4.dto.schedule.ScheduleDisplay;
 import Lv4.dto.schedule.ScheduleInput;
@@ -14,13 +15,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
-
     @Override
     public void addSchedule(ScheduleInput scheduleInput) {
         User user = userRepository.findById(scheduleInput.getWriterId())

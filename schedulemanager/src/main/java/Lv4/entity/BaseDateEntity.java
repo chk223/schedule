@@ -6,8 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -15,21 +14,21 @@ public class BaseDateEntity {
     @CreatedDate
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
         createdAt = now;
         updatedAt = now;
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));;
+        updatedAt = LocalDateTime.now();
     }
 }

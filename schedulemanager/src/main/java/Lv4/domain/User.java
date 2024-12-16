@@ -3,19 +3,23 @@ package Lv4.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
 @Getter
 @Entity
 @Table(name="user")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
-    @GeneratedValue
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID id;
     @Column(nullable = false)
     @Setter
     private String name;
@@ -25,9 +29,9 @@ public class User {
     @Column(nullable = false)
     @Setter
     private String email;
-    @Column(updatable = false)
+    @Column(name="joined_at",updatable = false, nullable = false)
     @CreatedDate
-    private ZonedDateTime joinedAt;
+    private LocalDateTime joinedAt;
 
     public User() {
     }
