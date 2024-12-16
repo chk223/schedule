@@ -34,16 +34,15 @@ public class LoginController {
     }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest httpRequest) {
-        Optional<User> userOptional = userService.login(loginRequest);
-        if(userOptional.isPresent()) {
-            User user = userOptional.get();
-            HttpSession session = httpRequest.getSession();
-            session.setAttribute("user",loginRequest.getName());
-            log.info("로그인 성공!, 사용자 id ={}",user.getId());
+        try{
+            User user = userService.login(loginRequest, httpRequest);
+            log.info("로그인 성공!, id = {}",user.getId());
             return ResponseEntity.ok(new LoginResponse(user.getId()));
+        } catch (RuntimeException e) {
+            log.warn("로그인 실패! error ={}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        log.warn("로그인 실패: 잘못된 아이디 또는 비밀번호");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
     }
 
     @PostMapping("/logout")

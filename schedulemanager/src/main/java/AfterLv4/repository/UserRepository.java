@@ -9,6 +9,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
-    @Query("SELECT entity FROM User entity WHERE entity.name = :name AND entity.password = :password")
-    Optional<User> findByNameAndPassword(@Param("name") String name, @Param("password") String password);
+    Optional<User> findByName(String name);
 }
