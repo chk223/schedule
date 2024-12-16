@@ -61,9 +61,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void removeSchedule(Long id) {
-        if(!scheduleRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 id를 가진 객체가 없음! id= " + id);
-        }
-        scheduleRepository.deleteById(id);
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("해당 id를 가진 일정 객체가 없음! id= " + id));
+        scheduleRepository.delete(schedule);
     }
 }
