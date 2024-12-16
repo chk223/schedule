@@ -8,14 +8,12 @@ import java.util.UUID;
 
 @Getter
 public class UserUpdateInput {
-    private final UUID id;
     private final String name;
     private final String password;
     private final String email;
 
     @JsonCreator
-    public UserUpdateInput(@JsonProperty("id") UUID id, @JsonProperty("name") String name, @JsonProperty("password")String password, @JsonProperty("email")String email) {
-        this.id = id;
+    public UserUpdateInput(@JsonProperty("name") String name, @JsonProperty("password")String password, @JsonProperty("email")String email) {
         this.name = name;
         this.password = password;
         this.email = email;

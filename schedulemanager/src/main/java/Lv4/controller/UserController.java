@@ -1,8 +1,6 @@
 package Lv4.controller;
 
-import Lv4.dto.user.UserDeleteInput;
 import Lv4.dto.user.UserDisplay;
-import Lv4.dto.user.UserInput;
 import Lv4.dto.user.UserUpdateInput;
 import Lv4.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +27,17 @@ public class UserController {
         return userService.findUser(id);
     }
 
-    @PutMapping
-    public void editUserInfo(@RequestBody UserUpdateInput updateInput) {
+    @PutMapping("/{id}")
+    public void editUserInfo(@PathVariable UUID id,@RequestBody UserUpdateInput updateInput) {
         log.info("updateInput: {}", updateInput);
-        log.info("수정하려는 id = {} name = {}", updateInput.getId(), updateInput.getName());
-        userService.editUserInfo(updateInput);
+        log.info("수정하려는 id = {} name = {}", id, updateInput.getName());
+        userService.editUserInfo(id,updateInput);
     }
 
-    @DeleteMapping
-    public void removeUser(@RequestBody UserDeleteInput deleteInput) {
-        log.info("삭제하려는 id = {}", deleteInput.getId());
-        userService.removeUser(deleteInput);
+    @DeleteMapping("/{id}")
+    public void removeUser(@PathVariable UUID id) {
+        log.info("삭제하려는 id = {}", id);
+        userService.removeUser(id);
     }
 
 }

@@ -2,7 +2,6 @@ package Lv4.service;
 
 import Lv4.domain.User;
 import Lv4.dto.login.LoginRequest;
-import Lv4.dto.user.UserDeleteInput;
 import Lv4.dto.user.UserDisplay;
 import Lv4.dto.user.UserInput;
 import Lv4.dto.user.UserUpdateInput;
@@ -17,6 +16,6 @@ public interface UserService {
     void joinUser(UserInput input);
     List<UserDisplay> findAllUser();
     UserDisplay findUser(UUID id);
-    void editUserInfo(UserUpdateInput updateInput);
-    void removeUser(UserDeleteInput deleteInput);
+    void editUserInfo(UUID id,UserUpdateInput updateInput);
+    void removeUser(UUID id);
 }
