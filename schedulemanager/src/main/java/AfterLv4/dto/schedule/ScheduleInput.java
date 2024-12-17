@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.UUID;
 @Getter
 public class ScheduleInput {
-    @NotBlank
+    @NotNull
     private final UUID writerId;
     @NotBlank
     @Size(max = 10,message = "제목은 10글자 이내여야 합니다.")

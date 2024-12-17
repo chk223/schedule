@@ -1,14 +1,14 @@
 package AfterLv4.dto.login;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public class LoginRequest {
-    @NotNull
+    @NotBlank
     private final String name;
-    @NotNull
+    @NotBlank
     private final String password;
 }
