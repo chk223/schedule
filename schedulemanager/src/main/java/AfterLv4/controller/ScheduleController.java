@@ -2,13 +2,16 @@ package AfterLv4.controller;
 
 import AfterLv4.dto.schedule.ScheduleDisplay;
 import AfterLv4.dto.schedule.ScheduleInput;
+import AfterLv4.dto.schedule.SchedulePageDisplay;
 import AfterLv4.dto.schedule.ScheduleUpdateInput;
 import AfterLv4.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +25,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/all")
-    public List<ScheduleDisplay> findSchedules() {
-        return scheduleService.findSchedules();
+    public Page<SchedulePageDisplay> findSchedules(@PageableDefault(size=10, sort="updateAt",direction = Sort.Direction.DESC) Pageable pageable) {
+        return scheduleService.findSchedules(pageable);
     }
 
     @GetMapping("/{id}")

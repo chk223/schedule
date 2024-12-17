@@ -4,12 +4,16 @@ import AfterLv4.domain.Schedule;
 import AfterLv4.domain.User;
 import AfterLv4.dto.schedule.ScheduleDisplay;
 import AfterLv4.dto.schedule.ScheduleInput;
+import AfterLv4.dto.schedule.SchedulePageDisplay;
 import AfterLv4.dto.schedule.ScheduleUpdateInput;
+import AfterLv4.repository.CommentRepository;
 import AfterLv4.repository.ScheduleRepository;
 import AfterLv4.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,7 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     @Override
     public void addSchedule(ScheduleInput scheduleInput) {
         User user = userRepository.findById(scheduleInput.getWriterId())
@@ -43,11 +48,26 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleDisplay> findSchedules() {
-        List<Schedule> schedules = scheduleRepository.findAll();
-        return schedules.stream()
-                .map(schedule -> new ScheduleDisplay(schedule.getId(),schedule.getUser().getName(),schedule.getTitle(),schedule.getContent()))
-                .toList();
+    public Page<SchedulePageDisplay> findSchedules(Pageable pageable) {
+        Page<Schedule> schedules = scheduleRepository.findAll(pageable);
+        // content만 사용하고 싶은 경우, page 객체가 아니라 List<ScheduleDisplay>를 반환하도록 한 후, 아래의 주석처리 된 부분을 사용하면 된다.
+//        return schedules.getContent().stream().map(schedule -> new ScheduleDisplay(schedule.getId(),schedule.getUser().getName(),schedule.getTitle(),schedule.getContent())).toList();
+        // pageable 정보가 모두 필요 한 경우, Page<ScheduleDisplay>를 반환하도록 한 후, 아래 주석 처리 된 부분을 사용하면 된다.
+        return schedules
+                .map(schedule ->{
+
+                    long totalComments = commentRepository.countByScheduleId(schedule.getId());
+                            return new SchedulePageDisplay(
+                                    schedule.getId(),
+                                    schedule.getUser().getName(),
+                                    schedule.getTitle(),
+                                    schedule.getContent(),
+                                    schedule.getCreatedAt(),
+                                    schedule.getUpdatedAt(),
+                                    totalComments
+                            );
+                }
+                );//page.map 사용(타입 변환)
     }
 
     @Override

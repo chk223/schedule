@@ -14,4 +14,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "JOIN c.user u " +
             "WHERE c.schedule.id = :scheduleId")
     List<CommentDisplay> findCommentDisplayByScheduleId(@Param("scheduleId") Long scheduleId);
+    long countByScheduleId(Long scheduleId);
 }

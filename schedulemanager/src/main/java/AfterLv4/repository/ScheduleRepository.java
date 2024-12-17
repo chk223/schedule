@@ -1,6 +1,8 @@
 package AfterLv4.repository;
 
 import AfterLv4.domain.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +13,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @EntityGraph(attributePaths = {"user"})
     Optional<Schedule> findById(Long id);
     @EntityGraph(attributePaths = {"user"})
-    List<Schedule> findAll();
+    Page<Schedule> findAll(Pageable pageable);
 }
