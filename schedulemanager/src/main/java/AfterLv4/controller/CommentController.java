@@ -1,12 +1,13 @@
 package AfterLv4.controller;
 
-import AfterLv4.domain.Comment;
 import AfterLv4.dto.comment.CommentDisplay;
 import AfterLv4.dto.comment.CommentInput;
 import AfterLv4.dto.comment.CommentUpdateInput;
 import AfterLv4.service.CommentService;
+import AfterLv4.util.FieldErrorFinder;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,8 @@ public class CommentController {
     }
 
     @PostMapping
-    void addComment(@RequestBody @Valid CommentInput commentInput) {
+    void addComment(@RequestBody @Valid CommentInput commentInput, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         commentService.addComment(commentInput);
     }
 
@@ -32,7 +34,8 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    void editComment(@PathVariable Long id, @RequestBody @Valid CommentUpdateInput updateInput) {
+    void editComment(@PathVariable Long id, @RequestBody @Valid CommentUpdateInput updateInput, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         commentService.editComment(id,updateInput);
     }
 
@@ -40,4 +43,5 @@ public class CommentController {
     void removeComment(@PathVariable Long id) {
         commentService.removeComment(id);
     }
+
 }

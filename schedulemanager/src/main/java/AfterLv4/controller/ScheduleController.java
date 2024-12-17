@@ -5,12 +5,14 @@ import AfterLv4.dto.schedule.ScheduleInput;
 import AfterLv4.dto.schedule.SchedulePageDisplay;
 import AfterLv4.dto.schedule.ScheduleUpdateInput;
 import AfterLv4.service.ScheduleService;
+import AfterLv4.util.FieldErrorFinder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +22,8 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public void addSchedule(@RequestBody @Valid ScheduleInput scheduleInput) {
+    public void addSchedule(@RequestBody @Valid ScheduleInput scheduleInput, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         scheduleService.addSchedule(scheduleInput);
     }
 
@@ -35,7 +38,8 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public void editSchedule(@PathVariable Long id,@RequestBody @Valid ScheduleUpdateInput updateInput) {
+    public void editSchedule(@PathVariable Long id, @RequestBody @Valid ScheduleUpdateInput updateInput, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         scheduleService.editSchedule(id, updateInput);
     }
     @DeleteMapping("/{id}")

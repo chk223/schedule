@@ -6,7 +6,11 @@ import AfterLv4.dto.login.LoginRequest;
 import AfterLv4.dto.user.UserDisplay;
 import AfterLv4.dto.user.UserInput;
 import AfterLv4.dto.user.UserUpdateInput;
+import AfterLv4.exception.ApiException;
+import AfterLv4.exception.ErrorMessage;
 import AfterLv4.repository.UserRepository;
+import AfterLv4.util.EntityFinder;
+import AfterLv4.util.ExceptionThrow;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -33,18 +37,20 @@ public class UserServiceImpl implements UserService {
     public User login(LoginRequest loginRequest, HttpServletRequest httpRequest) {
         Optional<User> userOptional = userRepository.findByName(loginRequest.getName());
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("아이디가 존재하지 않습니다.");
+            ExceptionThrow.throwApiException(ErrorMessage.ENTITY_NOT_FOUND);
         }
         User user = userOptional.get();
         // 비밀번호 검증
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            ExceptionThrow.throwApiException(ErrorMessage.PASSWORD_IS_WRONG);
         }
         // 세션 생성
         HttpSession session = httpRequest.getSession();
         session.setAttribute("user", user.getName());
         return user; // 검증 성공한 사용자 반환
     }
+
+
 
     @Override
     public void joinUser(UserInput input) {
@@ -63,15 +69,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDisplay findUser(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다. 입력한 id = " + id));
+        User user = EntityFinder.findByIdOrThrowException(id, userRepository, "유저");
         return new UserDisplay(user.getId(),user.getName(),user.getEmail(),user.getJoinedAt());
     }
 
     @Override
     @Transactional
     public void editUserInfo(UUID id ,UserUpdateInput updateInput) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다. 입력한 id = "+id));
+        User user = EntityFinder.findByIdOrThrowException(id, userRepository, "유저");
         user.setName(updateInput.getName());
         user.setPassword(updateInput.getPassword());
         user.setEmail(updateInput.getEmail());
@@ -80,6 +85,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeUser(UUID id) {
-        userRepository.deleteById(id);
+        if(userRepository.existsById(id)) userRepository.deleteById(id);
     }
 }

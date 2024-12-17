@@ -3,9 +3,11 @@ package AfterLv4.controller;
 import AfterLv4.dto.user.UserDisplay;
 import AfterLv4.dto.user.UserUpdateInput;
 import AfterLv4.service.UserService;
+import AfterLv4.util.FieldErrorFinder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +31,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public void editUserInfo(@PathVariable UUID id,@RequestBody @Valid UserUpdateInput updateInput) {
+    public void editUserInfo(@PathVariable UUID id,@RequestBody @Valid UserUpdateInput updateInput, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         log.info("updateInput: {}", updateInput);
         log.info("수정하려는 id = {} name = {}", id, updateInput.getName());
         userService.editUserInfo(id,updateInput);
@@ -40,5 +43,4 @@ public class UserController {
         log.info("삭제하려는 id = {}", id);
         userService.removeUser(id);
     }
-
 }

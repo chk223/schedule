@@ -5,6 +5,7 @@ import AfterLv4.dto.login.LoginRequest;
 import AfterLv4.dto.login.LoginResponse;
 import AfterLv4.dto.user.UserInput;
 import AfterLv4.service.UserService;
+import AfterLv4.util.FieldErrorFinder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,12 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -28,12 +28,14 @@ import java.util.Optional;
 public class LoginController {
     private final UserService userService;
     @PostMapping("/signup")
-    public void signUpUser(@RequestBody @Valid UserInput userInput) {
+    public void signUpUser(@RequestBody @Valid UserInput userInput, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         log.info("가입 정보: name={} password={} email={} ", userInput.getName(), userInput.getPassword(), userInput.getEmail());
         userService.joinUser(userInput);
     }
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest httpRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest httpRequest, BindingResult result) {
+        FieldErrorFinder.isFieldHasError(result);
         try{
             User user = userService.login(loginRequest, httpRequest);
             log.info("로그인 성공!, id = {}",user.getId());
