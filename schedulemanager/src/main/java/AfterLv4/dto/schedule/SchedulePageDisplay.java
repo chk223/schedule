@@ -3,6 +3,7 @@ package AfterLv4.dto.schedule;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Getter
 public class SchedulePageDisplay {
@@ -15,12 +16,13 @@ public class SchedulePageDisplay {
     private final long totalComment;
 
     public SchedulePageDisplay(Long id, String userName, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, long totalComment) {
+//    public SchedulePageDisplay(Long id, String userName, String title, String content,long totalComment) {
         this.id = id;
         this.userName = userName;
         this.title = title;
         this.content = content;
-        this.createdAt = createdAt;
+        this.createdAt=createdAt;
         this.updatedAt = updatedAt;
-        this.totalComment = totalComment;
+        this. totalComment= totalComment;
     }
 }

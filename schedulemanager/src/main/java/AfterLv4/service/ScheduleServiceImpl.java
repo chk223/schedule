@@ -49,25 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Page<SchedulePageDisplay> findSchedules(Pageable pageable) {
-        Page<Schedule> schedules = scheduleRepository.findAll(pageable);
-        // content만 사용하고 싶은 경우, page 객체가 아니라 List<ScheduleDisplay>를 반환하도록 한 후, 아래의 주석처리 된 부분을 사용하면 된다.
-//        return schedules.getContent().stream().map(schedule -> new ScheduleDisplay(schedule.getId(),schedule.getUser().getName(),schedule.getTitle(),schedule.getContent())).toList();
-        // pageable 정보가 모두 필요 한 경우, Page<ScheduleDisplay>를 반환하도록 한 후, 아래 주석 처리 된 부분을 사용하면 된다.
-        return schedules
-                .map(schedule ->{
-
-                    long totalComments = commentRepository.countByScheduleId(schedule.getId());
-                            return new SchedulePageDisplay(
-                                    schedule.getId(),
-                                    schedule.getUser().getName(),
-                                    schedule.getTitle(),
-                                    schedule.getContent(),
-                                    schedule.getCreatedAt(),
-                                    schedule.getUpdatedAt(),
-                                    totalComments
-                            );
-                }
-                );//page.map 사용(타입 변환)
+        return scheduleRepository.findAllWithCommentCount(pageable);
     }
 
     @Override
