@@ -6,6 +6,8 @@ import AfterLv4.dto.schedule.SchedulePageDisplay;
 import AfterLv4.dto.schedule.ScheduleUpdateInput;
 import AfterLv4.service.ScheduleService;
 import AfterLv4.util.FieldErrorFinder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,19 +24,24 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public void addSchedule(@RequestBody @Valid ScheduleInput scheduleInput, BindingResult result) {
+    public void addSchedule(@RequestBody @Valid ScheduleInput scheduleInput, BindingResult result, HttpServletRequest request) {
         FieldErrorFinder.isFieldHasError(result);
-        scheduleService.addSchedule(scheduleInput);
+        scheduleService.addSchedule(scheduleInput, request);
     }
 
     @GetMapping("/all")
-    public Page<SchedulePageDisplay> findSchedules(@PageableDefault(size=10, sort="updateAt",direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<SchedulePageDisplay> findSchedules(@PageableDefault(size=10, sort="updatedAt",direction = Sort.Direction.DESC) Pageable pageable) {
         return scheduleService.findSchedules(pageable);
     }
 
     @GetMapping("/{id}")
     public ScheduleDisplay findScheduleById(@PathVariable Long id) {
         return scheduleService.findScheduleById(id);
+    }
+
+    @GetMapping("/mine")
+    public Page<SchedulePageDisplay> findMySchedules(@PageableDefault(size=10, sort="updatedAt",direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request) {
+        return scheduleService.findMySchedules(pageable,request);
     }
 
     @PutMapping("/{id}")

@@ -5,6 +5,7 @@ import AfterLv4.dto.comment.CommentInput;
 import AfterLv4.dto.comment.CommentUpdateInput;
 import AfterLv4.service.CommentService;
 import AfterLv4.util.FieldErrorFinder;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -23,9 +24,9 @@ public class CommentController {
     }
 
     @PostMapping
-    void addComment(@RequestBody @Valid CommentInput commentInput, BindingResult result) {
+    void addComment(@RequestBody @Valid CommentInput commentInput, BindingResult result, HttpServletRequest request) {
         FieldErrorFinder.isFieldHasError(result);
-        commentService.addComment(commentInput);
+        commentService.addComment(commentInput, request);
     }
 
     @GetMapping("/{scheduleId}")

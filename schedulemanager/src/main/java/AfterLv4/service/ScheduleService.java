@@ -4,6 +4,7 @@ import AfterLv4.dto.schedule.ScheduleDisplay;
 import AfterLv4.dto.schedule.ScheduleInput;
 import AfterLv4.dto.schedule.SchedulePageDisplay;
 import AfterLv4.dto.schedule.ScheduleUpdateInput;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,7 +15,7 @@ public interface ScheduleService {
      * 일정 추가
      * @param scheduleInput 추가 할 일정 양식(writerId, title, content)
      */
-    void addSchedule(ScheduleInput scheduleInput);
+    void addSchedule(ScheduleInput scheduleInput, HttpServletRequest request);
 
     /**
      * 특정 일정 정보 조회
@@ -29,6 +30,14 @@ public interface ScheduleService {
      * @return 페이징 된 일정
      */
     Page<SchedulePageDisplay> findSchedules(Pageable pageable);
+
+    /**
+     * 현재 로그인 한 유저가 작성한 일정 조회 - 페이징 적용
+     * @param pageable 페이징 변수(page,size,sort) 입력하지 않은 경우 default 값 적용
+     * @param request 세션 값 가져오기 위한 HttpServletRequest
+     * @return 페이징 된 일정
+     */
+    Page<SchedulePageDisplay> findMySchedules(Pageable pageable, HttpServletRequest request);
 
     /**
      * 일정 수정

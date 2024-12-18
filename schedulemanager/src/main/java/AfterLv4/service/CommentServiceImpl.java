@@ -6,37 +6,39 @@ import AfterLv4.domain.User;
 import AfterLv4.dto.comment.CommentDisplay;
 import AfterLv4.dto.comment.CommentInput;
 import AfterLv4.dto.comment.CommentUpdateInput;
-import AfterLv4.exception.ApiException;
-import AfterLv4.exception.ErrorMessage;
 import AfterLv4.repository.CommentRepository;
 import AfterLv4.repository.ScheduleRepository;
+import AfterLv4.repository.UserRepository;
 import AfterLv4.util.EntityFinder;
+import AfterLv4.util.UserIdHandlerFromSession;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
 public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, ScheduleRepository scheduleRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, ScheduleRepository scheduleRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.scheduleRepository = scheduleRepository;
+        this.userRepository = userRepository;
     }
 
+    @Transactional //한번에 트랜잭션을 실행하는 것으로 성능 향상 고려함!
     @Override
-    public void addComment(CommentInput input) {
-        Schedule schedule = scheduleRepository.findUserAndSchedule(input.getWriterId(), input.getScheduleId())
-                .orElseThrow(() -> {
-                    ErrorMessage errorMessage = ErrorMessage.ENTITY_NOT_FOUND;
-                    return new ApiException(errorMessage.getMessage(), errorMessage.getStatus());
-                });
-        User user = schedule.getUser();
+    public void addComment(CommentInput input, HttpServletRequest request) {
+        UUID userId = UserIdHandlerFromSession.getMyIdFromSession(request);
+        Schedule schedule = EntityFinder.findByIdOrThrowException(input.getScheduleId(), scheduleRepository, "일정");
+        User user = EntityFinder.findByIdOrThrowException(userId, userRepository, "유저");
         Comment comment = new Comment(input.getContent(),user,schedule);
         commentRepository.save(comment);
     }

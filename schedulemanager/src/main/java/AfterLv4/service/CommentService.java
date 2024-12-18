@@ -3,6 +3,7 @@ package AfterLv4.service;
 import AfterLv4.dto.comment.CommentDisplay;
 import AfterLv4.dto.comment.CommentInput;
 import AfterLv4.dto.comment.CommentUpdateInput;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface CommentService {
      * 댓글 작성
      * @param input 댓글 작성 양식(content, writerId, scheduleId)
      */
-    void addComment(CommentInput input);
+    void addComment(CommentInput input, HttpServletRequest request);
 
     /**
      * 일정의 모든 댓글 조회

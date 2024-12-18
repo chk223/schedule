@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         }
         // 세션 생성
         HttpSession session = httpRequest.getSession();
-        session.setAttribute("user", user.getName());
+        session.setAttribute("user", user.getId());
         return user; // 검증 성공한 사용자 반환
     }
 

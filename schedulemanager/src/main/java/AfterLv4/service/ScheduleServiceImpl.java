@@ -12,7 +12,10 @@ import AfterLv4.repository.CommentRepository;
 import AfterLv4.repository.ScheduleRepository;
 import AfterLv4.repository.UserRepository;
 import AfterLv4.util.EntityFinder;
+import AfterLv4.util.UserIdHandlerFromSession;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.events.Event;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -32,12 +36,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     @Override
-    public void addSchedule(ScheduleInput scheduleInput) {
-        User user = EntityFinder.findByIdOrThrowException(scheduleInput.getWriterId(),userRepository,"유저");
+    public void addSchedule(ScheduleInput scheduleInput, HttpServletRequest request) {
+        UUID userId = UserIdHandlerFromSession.getMyIdFromSession(request);
+        User user = EntityFinder.findByIdOrThrowException(userId,userRepository,"유저");
         Schedule schedule = new Schedule(scheduleInput.getTitle(),scheduleInput.getContent());
         schedule.setUser(user);
         scheduleRepository.save(schedule);
     }
+
 
     @Override
     public ScheduleDisplay findScheduleById(Long id) {
@@ -56,6 +62,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public Page<SchedulePageDisplay> findMySchedules(Pageable pageable, HttpServletRequest request) {
+        UUID userId = UserIdHandlerFromSession.getMyIdFromSession(request);
+        return scheduleRepository.findMySchedulesWithCommentCount(userId,pageable);
+    }
+
+    @Override
     public void editSchedule(Long id, ScheduleUpdateInput updateInput) {
         Schedule schedule = EntityFinder.findByIdOrThrowException(id,scheduleRepository,"일정");
         schedule.setTitle(updateInput.getTitle());
@@ -68,6 +80,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = EntityFinder.findByIdOrThrowException(id,scheduleRepository,"일정");
         scheduleRepository.delete(schedule);
     }
+
 
 
 }
