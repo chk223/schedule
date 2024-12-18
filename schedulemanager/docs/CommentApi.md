@@ -22,7 +22,7 @@
 ### 3. URL
 `/comment`
 ### 4. 요청
-댓글 내용, 유저 고유 식별자, 일정 고유 식별자
+![img.png](images/comment/add.png)
 ### 5. 응답
 x
 ### 6. 상세 코드
@@ -42,11 +42,11 @@ x
 ### 2. Method
 `get`
 ### 3. URL
-`/comment`
+`/comment/{id}`
 ### 4. 요청
-x
+url에 scheduleId를 전달
 ### 5. 응답
-회원 이름, 댓글 내용, 수정일
+![img.png](images/comment/get.png)
 ### 6. 상세 코드
 **200** : 정상 조회<br>
 
@@ -61,9 +61,10 @@ x
 ### 2. Method
 `put`
 ### 3. URL
-`/comment`
+`/comment/{id}`
 ### 4. 요청
-댓글의 고유 식별 id, 변경 할 필드 내용
+url에 수정 할 댓글 id 전달, body에 수정 양식 전달<br>
+![img.png](images/comment/edit.png)
 ### 5. 응답
 x
 ### 6. 상세 코드
@@ -83,9 +84,9 @@ x
 ### 2. Method
 `delete`
 ### 3. URL
-`/comment`
+`/comment/{id}`
 ### 4. 요청
-댓글의 고유 식별 id
+url에 삭제 할 id 값 전달
 ### 5. 응답
 x
 ### 6. 상세 코드
