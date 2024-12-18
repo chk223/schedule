@@ -48,7 +48,7 @@ public interface UserService {
     void editUserInfo(UUID id,UserUpdateInput updateInput);
 
     /**
-     * 유저 정보 삭제
+     * 유저 정보 삭제- db에서 on cascade 설정해 주어서 연관 테이블의 필드 모두 삭제됨!
      * @param id 삭제할 유저 식별자
      */
     void removeUser(UUID id);

@@ -29,7 +29,7 @@ public interface CommentService {
     void editComment(Long id,CommentUpdateInput updateInput);
 
     /**
-     * 댓글 삭제
+     * 댓글 삭제- db에서 on cascade 설정해 주어서 연관 테이블의 필드 모두 삭제됨!
      * @param id 삭제 할 댓글 식별자
      */
     void removeComment(Long id);

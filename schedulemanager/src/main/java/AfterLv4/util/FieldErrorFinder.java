@@ -7,6 +7,10 @@ import org.springframework.validation.FieldError;
 
 import java.util.List;
 
+/**
+ * 필드 검증 확인.
+ * 필드 에러 발생 시 예외 던짐
+ */
 public class FieldErrorFinder {
     public static void isFieldHasError(BindingResult result) {
         if (result.hasErrors()) {

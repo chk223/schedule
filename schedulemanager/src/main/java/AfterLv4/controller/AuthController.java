@@ -25,14 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-public class LoginController {
+public class AuthController {
     private final UserService userService;
+
+    /**
+     * 회원 가입
+     * @param userInput 회원 가입 양식
+     * @param result
+     */
     @PostMapping("/signup")
     public void signUpUser(@RequestBody @Valid UserInput userInput, BindingResult result) {
         FieldErrorFinder.isFieldHasError(result);
         log.info("가입 정보: name={} password={} email={} ", userInput.getName(), userInput.getPassword(), userInput.getEmail());
         userService.joinUser(userInput);
     }
+
+    /**
+     * 로그인
+     * @param loginRequest 로그인 양식
+     * @param httpRequest
+     * @param result
+     * @return 로그인 한 유저 id 반환
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest httpRequest, BindingResult result) {
         FieldErrorFinder.isFieldHasError(result);
@@ -47,6 +61,11 @@ public class LoginController {
 
     }
 
+    /**
+     * 로그아웃
+     * @param request
+     * @param response
+     */
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);

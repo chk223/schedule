@@ -14,6 +14,14 @@ public class LoginFilter implements Filter {
 
     private static final String[] WHITE_LIST = {"/auth/*"};
 
+    /**
+     * 로그인 필터 실행
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
